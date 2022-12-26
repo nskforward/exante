@@ -1,7 +1,5 @@
-# Exante API
+# Exante API v3
 
-Language: Golang
+### for Golang
 
-Support API version: 3
-
-Spec: https://api-live.exante.eu/api-docs/
+spec: https://api-live.exante.eu/api-docs/
