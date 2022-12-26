@@ -7,14 +7,14 @@ import (
 	"time"
 )
 
-func TestGetCurrencies(t *testing.T) {
+func TestGetCurrenciesDetailed(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	client, err := Client(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	currencies, err := client.GetCurrencies()
+	currencies, err := client.GetCurrenciesDetailed()
 	if err != nil {
 		t.Fatal(err)
 	}

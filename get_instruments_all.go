@@ -8,14 +8,13 @@ import (
 	"strings"
 )
 
-type responseCurrencies struct {
-	Currencies []string `json:"currencies"`
-}
-
-func (client *Client) GetCurrencies() ([]string, error) {
+/*
+	WARNING this function utilizes RAM around 700 MB per each call
+*/
+func (client *Client) GetInstrumentsAll() ([]Instrument, error) {
 	client.refreshAccessToken()
 
-	url := fmt.Sprintf("%s/md/3.0/crossrates", client.serverAddr)
+	url := fmt.Sprintf("%s/md/3.0/symbols", client.serverAddr)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -38,11 +37,11 @@ func (client *Client) GetCurrencies() ([]string, error) {
 		return nil, fmt.Errorf("bad http response code: %s: %s", resp.Status, string(data))
 	}
 
-	var currencies responseCurrencies
-	err = json.Unmarshal(data, &currencies)
+	var instruments []Instrument
+	err = json.Unmarshal(data, &instruments)
 	if err != nil {
 		return nil, fmt.Errorf("cannot parse response: %w", err)
 	}
 
-	return currencies.Currencies, nil
+	return instruments, nil
 }

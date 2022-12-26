@@ -8,14 +8,17 @@ import (
 	"strings"
 )
 
-type responseCurrencies struct {
-	Currencies []string `json:"currencies"`
+type InstrumentGroup struct {
+	Group    string   `json:"group"`
+	Name     string   `json:"name"`
+	Types    []string `json:"types"`
+	Exchange string   `json:"exchange"`
 }
 
-func (client *Client) GetCurrencies() ([]string, error) {
+func (client *Client) GetInstrumentGroups() ([]InstrumentGroup, error) {
 	client.refreshAccessToken()
 
-	url := fmt.Sprintf("%s/md/3.0/crossrates", client.serverAddr)
+	url := fmt.Sprintf("%s/md/3.0/groups", client.serverAddr)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -38,11 +41,11 @@ func (client *Client) GetCurrencies() ([]string, error) {
 		return nil, fmt.Errorf("bad http response code: %s: %s", resp.Status, string(data))
 	}
 
-	var currencies responseCurrencies
-	err = json.Unmarshal(data, &currencies)
+	var groups []InstrumentGroup
+	err = json.Unmarshal(data, &groups)
 	if err != nil {
 		return nil, fmt.Errorf("cannot parse response: %w", err)
 	}
 
-	return currencies.Currencies, nil
+	return groups, nil
 }

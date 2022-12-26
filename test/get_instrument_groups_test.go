@@ -7,19 +7,19 @@ import (
 	"time"
 )
 
-func TestGetCurrencies(t *testing.T) {
+func TestGetInstrumentGroups(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	client, err := Client(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	currencies, err := client.GetCurrencies()
+	groups, err := client.GetInstrumentGroups()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(currencies) == 0 {
-		t.Fatal("currencies cannot be empty")
+	if len(groups) == 0 {
+		t.Fatal("groups cannot be empty")
 	}
-	fmt.Println(currencies)
+	fmt.Println(groups)
 }

@@ -8,14 +8,22 @@ import (
 	"strings"
 )
 
-type responseCurrencies struct {
-	Currencies []string `json:"currencies"`
+type responseInstrumentSchedule struct {
+	Intervals []InstrumentSchedule `json:"intervals"`
 }
 
-func (client *Client) GetCurrencies() ([]string, error) {
+type InstrumentSchedule struct {
+	Name   string `json:"name"`
+	Period struct {
+		Start int64 `json:"start"`
+		End   int64 `json:"end"`
+	} `json:"period"`
+}
+
+func (client *Client) GetInstrumentSchedule(SymbolID string) ([]InstrumentSchedule, error) {
 	client.refreshAccessToken()
 
-	url := fmt.Sprintf("%s/md/3.0/crossrates", client.serverAddr)
+	url := fmt.Sprintf("%s/md/3.0/symbols/%s/schedule", client.serverAddr, SymbolID)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -38,11 +46,11 @@ func (client *Client) GetCurrencies() ([]string, error) {
 		return nil, fmt.Errorf("bad http response code: %s: %s", resp.Status, string(data))
 	}
 
-	var currencies responseCurrencies
-	err = json.Unmarshal(data, &currencies)
+	var schedule responseInstrumentSchedule
+	err = json.Unmarshal(data, &schedule)
 	if err != nil {
 		return nil, fmt.Errorf("cannot parse response: %w", err)
 	}
 
-	return currencies.Currencies, nil
+	return schedule.Intervals, nil
 }

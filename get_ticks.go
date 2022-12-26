@@ -8,14 +8,30 @@ import (
 	"strings"
 )
 
-type responseCurrencies struct {
-	Currencies []string `json:"currencies"`
+type Tick struct {
+	Timestamp  int64  `json:"timestamp"`
+	SymbolID   string `json:"symbolId"`
+	TradePrice string `json:"price"`
+	TradeSize  string `json:"size"`
+	Bid        []struct {
+		Price string `json:"price"`
+		Size  string `json:"size"`
+	} `json:"bid"`
+	Ask []struct {
+		Price string `json:"price"`
+		Size  string `json:"size"`
+	} `json:"ask"`
 }
 
-func (client *Client) GetCurrencies() ([]string, error) {
+func (client *Client) GetTicks(symbolId string, size int, trades bool) ([]Tick, error) {
 	client.refreshAccessToken()
 
-	url := fmt.Sprintf("%s/md/3.0/crossrates", client.serverAddr)
+	candleType := "quotes"
+	if trades {
+		candleType = "trades"
+	}
+
+	url := fmt.Sprintf("%s/md/3.0/ticks/%s?size=%d&type=%s", client.serverAddr, symbolId, size, candleType)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -38,11 +54,11 @@ func (client *Client) GetCurrencies() ([]string, error) {
 		return nil, fmt.Errorf("bad http response code: %s: %s", resp.Status, string(data))
 	}
 
-	var currencies responseCurrencies
-	err = json.Unmarshal(data, &currencies)
+	var ticks []Tick
+	err = json.Unmarshal(data, &ticks)
 	if err != nil {
 		return nil, fmt.Errorf("cannot parse response: %w", err)
 	}
 
-	return currencies.Currencies, nil
+	return ticks, nil
 }
