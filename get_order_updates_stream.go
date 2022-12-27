@@ -10,41 +10,37 @@ import (
 	"strings"
 )
 
-type Trade struct {
-	Timestamp int64  `json:"timestamp"`
-	SymbolID  string `json:"symbolId"`
-	Event     string `json:"event"`
-	Price     string `json:"price"`
-	Size      string `json:"size"`
+type updatedResponseOrder struct {
+	Event string        `json:"event"`
+	Order ResponseOrder `json:"order"`
 }
 
-func (client *Client) GetTradeStream(ctx context.Context, symbolIDs ...string) (chan Trade, error) {
-	if len(symbolIDs) == 0 {
-		return nil, fmt.Errorf("symbolIDs list must be defined")
-	}
-
+func (client *Client) GetOrderUpdatesStream(ctx context.Context) (chan ResponseOrder, error) {
 	client.refreshAccessToken()
 
-	url := fmt.Sprintf("%s/md/3.0/feed/trades/%s", client.serverAddr, strings.Join(symbolIDs, ","))
+	url := fmt.Sprintf("%s/trade/3.0/stream/orders", client.serverAddr)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	req.WithContext(client.ctx)
 	req.Header.Add("Authorization", strings.Join([]string{"Bearer", client.accessToken}, " "))
 	req.Header.Add("Accept", "application/x-json-stream")
+
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
+
 	if resp.StatusCode > 399 {
 		data, _ := ioutil.ReadAll(resp.Body)
 		_ = resp.Body.Close()
 		return nil, fmt.Errorf("bad http response code: %s: %s", resp.Status, string(data))
 	}
 
-	ch := make(chan Trade, 1)
+	ch := make(chan ResponseOrder, 1)
 
 	go func() {
 		defer resp.Body.Close()
@@ -53,27 +49,31 @@ func (client *Client) GetTradeStream(ctx context.Context, symbolIDs ...string) (
 		d := json.NewDecoder(resp.Body)
 
 		for {
-			var t Trade
-
-			err := d.Decode(&t)
-			if err == io.EOF {
-				return
-			}
-			if err != nil {
-				fmt.Println("[error] cannot decode trade:", err)
-				return
-			}
-
-			if t.Event != "" {
-				fmt.Println(t.SymbolID, "trades:", t.Event)
-				continue
-			}
-
 			select {
+
 			case <-ctx.Done():
 				return
-			case ch <- t:
-			default: // skip
+
+			default:
+				var updatedResponseOrder updatedResponseOrder
+
+				err := d.Decode(&updatedResponseOrder)
+				if err == io.EOF {
+					return
+				}
+				if err != nil {
+					fmt.Println("[error] cannot decode order update:", err)
+					return
+				}
+
+				if updatedResponseOrder.Event != "order" {
+					continue
+				}
+
+				select {
+				case ch <- updatedResponseOrder.Order:
+				default: // skip
+				}
 			}
 		}
 	}()
