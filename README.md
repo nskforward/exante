@@ -1,5 +1,5 @@
 [![GoDoc](https://pkg.go.dev/badge/github.com/nskforward/exante?status.svg)](https://pkg.go.dev/github.com/nskforward/exante?tab=doc)
-[![Release](https://img.shields.io/github/tags/nskforward/exante.svg?style=flat-square)](https://github.com/nskforward/exante/tags)
+[![Release](https://img.shields.io/github/releases/nskforward/exante.svg?style=flat-square)](https://github.com/nskforward/exante/tags)
 
 # Exante API v3
 
