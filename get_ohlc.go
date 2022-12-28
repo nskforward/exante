@@ -1,11 +1,11 @@
 package exante
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -18,7 +18,31 @@ type OHLC struct {
 	Volume    string `json:"volume"`
 }
 
-func (client *Client) GetOHLC(symbolId string, period time.Duration, filter map[string]string) ([]OHLC, error) {
+type FilterOHLC struct {
+	Filter
+}
+
+func (f *FilterOHLC) Limit(size int64) *FilterOHLC {
+	f.addInt("size", size)
+	return f
+}
+
+func (f *FilterOHLC) UseTrades() *FilterOHLC {
+	f.addString("type", "trades")
+	return f
+}
+
+func (f *FilterOHLC) DateFrom(date time.Time) *FilterOHLC {
+	f.addString("from", strconv.FormatInt(date.UnixMilli(), 10))
+	return f
+}
+
+func (f *FilterOHLC) DateTo(date time.Time) *FilterOHLC {
+	f.addString("to", strconv.FormatInt(date.UnixMilli(), 10))
+	return f
+}
+
+func (client *Client) GetOHLC(symbolId string, period time.Duration, filter *FilterOHLC) ([]OHLC, error) {
 	seconds := int64(period.Seconds())
 	switch seconds {
 	case 60, 300, 600, 900, 1800, 3600, 14400, 21600, 86400:
@@ -26,19 +50,7 @@ func (client *Client) GetOHLC(symbolId string, period time.Duration, filter map[
 		return nil, fmt.Errorf("period can be one of [1m, 5m, 10m, 15m, 30m, 1h, 4h, 6h, 24h]")
 	}
 
-	var buf bytes.Buffer
-	count := 0
-	for k, v := range filter {
-		if count > 0 {
-			buf.WriteString("&")
-		}
-		buf.WriteString(k)
-		buf.WriteString("=")
-		buf.WriteString(v)
-		count++
-	}
-
-	url := fmt.Sprintf("%s/md/3.0/ohlc/%s/%d?%s", client.serverAddr, symbolId, int64(period.Seconds()), buf.String())
+	url := fmt.Sprintf("%s/md/3.0/ohlc/%s/%d%s", client.serverAddr, symbolId, int64(period.Seconds()), filter.string())
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err

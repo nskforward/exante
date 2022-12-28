@@ -3,6 +3,7 @@ package test
 import (
 	"context"
 	"fmt"
+	"github.com/nskforward/exante"
 	"testing"
 	"time"
 )
@@ -14,7 +15,10 @@ func TestGetActiveOrders(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	orders, err := client.GetActiveOrders(map[string]string{"symbolId": "BTC.USD", "limit": "20"})
+
+	var filter exante.FilterActiveOrders
+
+	orders, err := client.GetActiveOrders(filter.SymbolID("BTC.USD").Limit(30))
 	if err != nil {
 		t.Fatal(err)
 	}

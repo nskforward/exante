@@ -15,8 +15,11 @@ func TestGetTicks(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	var filter exante.FilterTicks
+
 	count := 0
-	err = client.GetTicks("BTC.USD", map[string]string{"size": "1000"}, func(tick exante.Tick) bool {
+	err = client.GetTicks("BTC.USD", filter.Limit(100), func(tick exante.Tick) bool {
 		count++
 		return true
 	})

@@ -1,10 +1,11 @@
 package exante
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 type Tick struct {
@@ -22,20 +23,32 @@ type Tick struct {
 	} `json:"ask"`
 }
 
-func (client *Client) GetTicks(symbolId string, filter map[string]string, f func(tick Tick) bool) error {
-	var buf bytes.Buffer
-	count := 0
-	for k, v := range filter {
-		if count > 0 {
-			buf.WriteString("&")
-		}
-		buf.WriteString(k)
-		buf.WriteString("=")
-		buf.WriteString(v)
-		count++
-	}
+type FilterTicks struct {
+	Filter
+}
 
-	url := fmt.Sprintf("%s/md/3.0/ticks/%s?%s", client.serverAddr, symbolId, buf.String())
+func (f *FilterTicks) Limit(size int64) *FilterTicks {
+	f.addInt("size", size)
+	return f
+}
+
+func (f *FilterTicks) UseTrades() *FilterTicks {
+	f.addString("type", "trades")
+	return f
+}
+
+func (f *FilterTicks) DateFrom(date time.Time) *FilterTicks {
+	f.addString("from", strconv.FormatInt(date.UnixMilli(), 10))
+	return f
+}
+
+func (f *FilterTicks) DateTo(date time.Time) *FilterTicks {
+	f.addString("to", strconv.FormatInt(date.UnixMilli(), 10))
+	return f
+}
+
+func (client *Client) GetTicks(symbolId string, filter *FilterTicks, f func(tick Tick) bool) error {
+	url := fmt.Sprintf("%s/md/3.0/ticks/%s%s", client.serverAddr, symbolId, filter.string())
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

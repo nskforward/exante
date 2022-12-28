@@ -3,6 +3,7 @@ package test
 import (
 	"context"
 	"fmt"
+	"github.com/nskforward/exante"
 	"testing"
 	"time"
 )
@@ -14,7 +15,10 @@ func TestGetOHLC(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	candles, err := client.GetOHLC("BTC.USD", time.Minute, map[string]string{"size": "20", "type": "quotes"})
+
+	var filter exante.FilterOHLC
+
+	candles, err := client.GetOHLC("BTC.USD", time.Minute, filter.Limit(30))
 	if err != nil {
 		t.Fatal(err)
 	}

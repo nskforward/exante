@@ -1,27 +1,33 @@
 package exante
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 )
 
-func (client *Client) GetActiveOrders(filter map[string]string) ([]ResponseOrder, error) {
-	var buf bytes.Buffer
-	count := 0
-	for k, v := range filter {
-		if count > 0 {
-			buf.WriteString("&")
-		}
-		buf.WriteString(k)
-		buf.WriteString("=")
-		buf.WriteString(v)
-		count++
-	}
+type FilterActiveOrders struct {
+	Filter
+}
 
-	url := fmt.Sprintf("%s/trade/3.0/orders/active?%s", client.serverAddr, buf.String())
+func (f *FilterActiveOrders) Limit(size int64) *FilterActiveOrders {
+	f.addInt("limit", size)
+	return f
+}
+
+func (f *FilterActiveOrders) AccountID(accountID string) *FilterActiveOrders {
+	f.addString("accountId", accountID)
+	return f
+}
+
+func (f *FilterActiveOrders) SymbolID(symbolID string) *FilterActiveOrders {
+	f.addString("symbolId", symbolID)
+	return f
+}
+
+func (client *Client) GetActiveOrders(filter *FilterActiveOrders) ([]ResponseOrder, error) {
+	url := fmt.Sprintf("%s/trade/3.0/orders/active%s", client.serverAddr, filter.string())
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

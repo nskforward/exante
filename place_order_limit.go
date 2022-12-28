@@ -1,8 +1,29 @@
 package exante
 
 import (
+	"fmt"
 	"time"
 )
+
+type SettingsLimitOrder struct {
+	Filter
+}
+
+func (s *SettingsLimitOrder) Expiration(date time.Time) {
+	s.addString("gttExpiration", date.UTC().Format("2006-01-02 15:04:05"))
+}
+
+func (s *SettingsLimitOrder) ClientTag(tag string) {
+	s.addString("clientTag", tag)
+}
+
+func (s *SettingsLimitOrder) TakeProfit(price float64) {
+	s.addString("takeProfit", fmt.Sprintf("%.4f", price))
+}
+
+func (s *SettingsLimitOrder) StopLoss(price float64) {
+	s.addString("stopLoss", fmt.Sprintf("%.4f", price))
+}
 
 func (client *Client) PlaceLimitOrder(symbolID, side, price, quantity string, settings SettingsLimitOrder) ([]ResponseOrder, error) {
 	order := map[string]string{
@@ -15,7 +36,7 @@ func (client *Client) PlaceLimitOrder(symbolID, side, price, quantity string, se
 		"limitPrice": price,
 	}
 
-	for k, v := range settings {
+	for k, v := range settings.getMap() {
 		order[k] = v
 		if k == "gttExpiration" {
 			order["duration"] = "good_till_time"
@@ -23,22 +44,4 @@ func (client *Client) PlaceLimitOrder(symbolID, side, price, quantity string, se
 	}
 
 	return client.placeOrder(order)
-}
-
-type SettingsLimitOrder map[string]string
-
-func (s SettingsLimitOrder) Expiration(date time.Time) {
-	s["gttExpiration"] = date.UTC().Format("2006-01-02 15:04:05")
-}
-
-func (s SettingsLimitOrder) ClientTag(tag string) {
-	s["clientTag"] = tag
-}
-
-func (s SettingsLimitOrder) TakeProfit(price string) {
-	s["takeProfit"] = price
-}
-
-func (s SettingsLimitOrder) StopLoss(price string) {
-	s["stopLoss"] = price
 }

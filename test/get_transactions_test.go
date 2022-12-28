@@ -15,8 +15,11 @@ func TestGetTransactions(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	var filter exante.FilterTransactions
+
 	count := 0
-	err = client.GetTransactions(map[string]string{"limit": "100", "order": "DESC"}, func(transaction exante.Transaction) bool {
+	err = client.GetTransactions(filter.Limit(50).Desc().OperationTypes(exante.TypeRollover), func(transaction exante.Transaction) bool {
 		count++
 		return true
 	})

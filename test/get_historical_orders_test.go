@@ -15,8 +15,10 @@ func TestGetHistoricalOrders(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	var filter exante.FilterHistoricalOrders
 	count := 0
-	err = client.GetHistoricalOrders(map[string]string{"limit": "10"}, func(order exante.ResponseOrder) bool {
+	err = client.GetHistoricalOrders(filter.Limit(20), func(order exante.ResponseOrder) bool {
 		count++
 		return true
 	})
