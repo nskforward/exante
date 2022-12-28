@@ -2,7 +2,7 @@
 [![GoDoc](https://pkg.go.dev/badge/github.com/nskforward/exante?status.svg)](https://pkg.go.dev/github.com/nskforward/exante?tab=doc)
 [![Version](https://img.shields.io/github/v/tag/nskforward/exante)](https://github.com/nskforward/exante/tags)
 [![License](https://img.shields.io/github/license/nskforward/exante)](https://github.com/nskforward/exante/blob/main/LICENSE)
-![Issues](https://img.shields.io/github/issues/nskforward/exante)
+[![Issues](https://img.shields.io/github/issues/nskforward/exante)](https://github.com/nskforward/exante/issues)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/628a2e848af7439db9a13b02331891d7)](https://www.codacy.com/gh/nskforward/exante/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nskforward/exante&amp;utm_campaign=Badge_Grade)
 [![tests](https://github.com/nskforward/exante/actions/workflows/tests.yml/badge.svg)](https://github.com/nskforward/exante/actions/workflows/tests.yml)
 [![CodeQL](https://github.com/nskforward/exante/actions/workflows/codeql.yml/badge.svg)](https://github.com/nskforward/exante/actions/workflows/codeql.yml)
