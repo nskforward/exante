@@ -13,6 +13,14 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    
+    env:
+      EXANTE_ACCOUNT_ID: ${{ secrets.EXANTE_ACCOUNT_ID }}
+      EXANTE_SERVER_ADDR: ${{ secrets.EXANTE_SERVER_ADDR }}
+      EXANTE_CLIENT_ID: ${{ secrets.EXANTE_CLIENT_ID }}
+      EXANTE_APP_ID: ${{ secrets.EXANTE_APP_ID }}
+      EXANTE_SHARED_KEY: ${{ secrets.EXANTE_SHARED_KEY }}
+      
     steps:
     - uses: actions/checkout@v3
 
@@ -25,10 +33,4 @@ jobs:
       run: go build -v ./
 
     - name: Test
-      env:
-        EXANTE_ACCOUNT_ID: ${{ secrets.EXANTE_ACCOUNT_ID }}
-        EXANTE_SERVER_ADDR: ${{ secrets.EXANTE_SERVER_ADDR }}
-        EXANTE_CLIENT_ID: ${{ secrets.EXANTE_CLIENT_ID }}
-        EXANTE_APP_ID: ${{ secrets.EXANTE_APP_ID }}
-        EXANTE_SHARED_KEY: ${{ secrets.EXANTE_SHARED_KEY }}
       run: go test -v ./... -run TestBaseline
