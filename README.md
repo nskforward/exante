@@ -4,6 +4,7 @@
 [![License](https://img.shields.io/github/license/nskforward/exante)](https://github.com/nskforward/exante/blob/main/LICENSE)
 ![Issues](https://img.shields.io/github/issues/nskforward/exante)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/628a2e848af7439db9a13b02331891d7)](https://www.codacy.com/gh/nskforward/exante/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nskforward/exante&amp;utm_campaign=Badge_Grade)
+[![tests](https://github.com/nskforward/exante/actions/workflows/tests.yml/badge.svg)](https://github.com/nskforward/exante/actions/workflows/tests.yml)
 
 # Exante HTTP API v3
 
