@@ -14,7 +14,7 @@ func (client *Client) GetInstrumentsByGroup(groupID string, f func(instrument In
 		return err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return err
 	}

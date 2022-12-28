@@ -23,7 +23,7 @@ func (client *Client) GetInstrumentSpecification(symbolID string) (InstrumentSpe
 		return specification, err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return specification, err
 	}

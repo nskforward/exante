@@ -31,7 +31,7 @@ func (client *Client) placeOrder(order map[string]string) ([]ResponseOrder, erro
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Content-Length", strconv.Itoa(len(data)))
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return nil, err
 	}

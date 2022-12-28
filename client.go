@@ -63,7 +63,7 @@ func (client *Client) Close() {
 	client.cancel()
 }
 
-func (client *Client) executeHttpRequest(req *http.Request) (*http.Response, error) {
+func (client *Client) executeHTTPRequest(req *http.Request) (*http.Response, error) {
 	ctx, cancel := context.WithTimeout(client.ctx, 10*time.Second)
 	defer cancel()
 	req.WithContext(ctx)

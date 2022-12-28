@@ -14,7 +14,7 @@ func (client *Client) GetInstrumentsAll(f func(instrument Instrument) bool) erro
 		return err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return err
 	}

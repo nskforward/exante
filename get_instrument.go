@@ -6,8 +6,8 @@ import (
 	"net/http"
 )
 
-func (client *Client) GetInstrument(symbolId string) (Instrument, error) {
-	url := fmt.Sprintf("%s/md/3.0/symbols/%s", client.serverAddr, symbolId)
+func (client *Client) GetInstrument(symbolID string) (Instrument, error) {
+	url := fmt.Sprintf("%s/md/3.0/symbols/%s", client.serverAddr, symbolID)
 	var instrument Instrument
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -15,7 +15,7 @@ func (client *Client) GetInstrument(symbolId string) (Instrument, error) {
 		return instrument, err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return instrument, err
 	}

@@ -26,7 +26,7 @@ func (client *Client) GetInstrumentSchedule(symbolID string) ([]InstrumentSchedu
 		return nil, err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return nil, err
 	}

@@ -14,7 +14,7 @@ func (client *Client) GetInstrumentsByExchange(exchangeID string, f func(instrum
 		return err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return err
 	}

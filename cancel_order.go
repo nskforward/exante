@@ -20,7 +20,7 @@ func (client *Client) CancelOrder(orderID string) (ResponseOrder, error) {
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Content-Length", strconv.Itoa(len(dataReq)))
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return ResponseOrder{}, err
 	}

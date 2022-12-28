@@ -20,7 +20,7 @@ func (client *Client) GetCrossrate(fromSymbolID, toSymbolID string) (Crossrate, 
 		return Crossrate{}, err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return Crossrate{}, err
 	}

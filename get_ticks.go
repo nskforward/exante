@@ -21,15 +21,15 @@ type Tick struct {
 	} `json:"ask"`
 }
 
-func (client *Client) GetTicks(symbolId string, filter *FilterTicks, f func(tick Tick) bool) error {
-	url := fmt.Sprintf("%s/md/3.0/ticks/%s%s", client.serverAddr, symbolId, filter.string())
+func (client *Client) GetTicks(symbolID string, filter *FilterTicks, f func(tick Tick) bool) error {
+	url := fmt.Sprintf("%s/md/3.0/ticks/%s%s", client.serverAddr, symbolID, filter.string())
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return err
 	}

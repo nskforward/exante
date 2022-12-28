@@ -15,7 +15,7 @@ func (client *Client) GetOrder(orderID string) (ResponseOrder, error) {
 		return order, err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return order, err
 	}

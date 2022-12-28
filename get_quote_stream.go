@@ -28,7 +28,7 @@ func (client *Client) GetQuoteStream(ctx context.Context, level QuoteLevel, symb
 		return nil, err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return nil, err
 	}

@@ -14,7 +14,7 @@ func (client *Client) GetInstrumentsByType(symbolType string, f func(instrument 
 		return err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return err
 	}

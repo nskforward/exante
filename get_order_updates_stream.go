@@ -21,7 +21,7 @@ func (client *Client) GetOrderUpdatesStream(ctx context.Context) (chan ResponseO
 		return nil, err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return nil, err
 	}

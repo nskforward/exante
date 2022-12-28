@@ -15,7 +15,7 @@ func (client *Client) GetAccountSummaryByDate(currency string, date time.Time) (
 		return AccountSummary{}, err
 	}
 
-	resp, err := client.executeHttpRequest(req)
+	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return AccountSummary{}, err
 	}
