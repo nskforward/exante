@@ -9,6 +9,13 @@ import (
 	"strconv"
 )
 
+type OrderSide string
+
+const (
+	BUY  OrderSide = "buy"
+	SELL OrderSide = "sell"
+)
+
 func (client *Client) placeOrder(order map[string]string) ([]ResponseOrder, error) {
 	dataReq, err := json.Marshal(order)
 	if err != nil {

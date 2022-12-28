@@ -25,15 +25,15 @@ func (s *SettingsLimitOrder) StopLoss(price float64) {
 	s.addString("stopLoss", fmt.Sprintf("%.4f", price))
 }
 
-func (client *Client) PlaceLimitOrder(symbolID, side, price, quantity string, settings SettingsLimitOrder) ([]ResponseOrder, error) {
+func (client *Client) PlaceLimitOrder(symbolID string, side OrderSide, price, quantity float64, settings SettingsLimitOrder) ([]ResponseOrder, error) {
 	order := map[string]string{
 		"orderType":  "limit",
 		"duration":   "good_till_cancel",
 		"accountId":  client.accountID,
 		"symbolId":   symbolID,
-		"side":       side,
-		"quantity":   quantity,
-		"limitPrice": price,
+		"side":       string(side),
+		"quantity":   fmt.Sprintf("%.4f", quantity),
+		"limitPrice": fmt.Sprintf("%.4f", price),
 	}
 
 	for k, v := range settings.getMap() {

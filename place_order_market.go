@@ -1,5 +1,7 @@
 package exante
 
+import "fmt"
+
 type SettingsMarketOrder struct {
 	Filter
 }
@@ -16,14 +18,14 @@ func (s *SettingsMarketOrder) StopLoss(price float64) {
 	s.addFloat("stopLoss", price)
 }
 
-func (client *Client) PlaceMarketOrder(symbolID, side, quantity string, settings SettingsMarketOrder) ([]ResponseOrder, error) {
+func (client *Client) PlaceMarketOrder(symbolID string, side OrderSide, quantity float64, settings SettingsMarketOrder) ([]ResponseOrder, error) {
 	order := map[string]string{
 		"orderType": "market",
 		"duration":  "immediate_or_cancel",
 		"accountId": client.accountID,
 		"symbolId":  symbolID,
-		"side":      side,
-		"quantity":  quantity,
+		"side":      string(side),
+		"quantity":  fmt.Sprintf("%.4f", quantity),
 	}
 
 	for k, v := range settings.getMap() {
