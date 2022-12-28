@@ -55,7 +55,7 @@ func (client *Client) GetQuoteStream(ctx context.Context, level QuoteLevel, symb
 				return
 			}
 
-			if q.Event != "" {
+			if !q.Valid() {
 				continue
 			}
 
