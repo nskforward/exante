@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	accessTokenRefreshInterval = 6 * time.Hour
+	accessTokenRefreshInterval = 4 * time.Hour
 )
 
 type jwt struct {
@@ -25,25 +25,24 @@ type jwt struct {
 
 func (client *Client) refreshAccessToken() {
 	if client.accessTokenExpiration < time.Now().Add(time.Minute).Unix() {
-		//fmt.Println("refresh access token")
 		client.accessTokenExpiration = time.Now().Add(accessTokenRefreshInterval).Unix()
 		client.accessToken = generateAccessToken(client.clientID, client.appID, client.sharedKey, client.accessTokenExpiration)
 	}
 }
 
 func generateAccessToken(clientID, appID, sharedKey string, expiration int64) string {
-	token := jwt{
+	data, err := json.Marshal(jwt{
 		ClientID:      clientID,
 		ApplicationID: appID,
 		Rights:        []string{"symbols", "ohlc", "feed", "change", "crossrates", "orders", "summary", "accounts", "transactions"},
 		IssuedAt:      time.Now().Unix(),
 		Expiration:    expiration,
-	}
-	dat, err := json.Marshal(token)
+	})
 	if err != nil {
 		panic(fmt.Errorf("cannot marshal jwt token: %w", err))
 	}
-	payload := base64.RawStdEncoding.EncodeToString(toUTF8(string(dat)))
+
+	payload := base64.RawStdEncoding.EncodeToString(toUTF8(string(data)))
 	var buffer bytes.Buffer
 	buffer.WriteString("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.")
 	buffer.WriteString(payload)

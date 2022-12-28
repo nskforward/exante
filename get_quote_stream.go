@@ -28,8 +28,6 @@ func (client *Client) GetQuoteStream(ctx context.Context, level QuoteLevel, symb
 		return nil, err
 	}
 
-	req.Header.Add("Accept", "application/x-json-stream")
-
 	resp, err := client.executeHttpRequest(req)
 	if err != nil {
 		return nil, err

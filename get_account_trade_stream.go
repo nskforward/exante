@@ -25,8 +25,6 @@ func (client *Client) GetAccountTradeStream(ctx context.Context) (chan AccountTr
 		return nil, err
 	}
 
-	req.Header.Add("Accept", "application/x-json-stream")
-
 	resp, err := client.executeHttpRequest(req)
 	if err != nil {
 		return nil, err

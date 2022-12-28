@@ -3,7 +3,6 @@ package exante
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -19,14 +18,13 @@ type InstrumentSchedule struct {
 	} `json:"period"`
 }
 
-func (client *Client) GetInstrumentSchedule(SymbolID string) ([]InstrumentSchedule, error) {
-	url := fmt.Sprintf("%s/md/3.0/symbols/%s/schedule", client.serverAddr, SymbolID)
+func (client *Client) GetInstrumentSchedule(symbolID string) ([]InstrumentSchedule, error) {
+	url := fmt.Sprintf("%s/md/3.0/symbols/%s/schedule", client.serverAddr, symbolID)
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Accept", "application/json")
 
 	resp, err := client.executeHttpRequest(req)
 	if err != nil {
@@ -34,17 +32,8 @@ func (client *Client) GetInstrumentSchedule(SymbolID string) ([]InstrumentSchedu
 	}
 
 	defer client.closeResponse(resp.Body)
-
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("cannot read response body: %w", err)
-	}
-
 	var schedule responseInstrumentSchedule
-	err = json.Unmarshal(data, &schedule)
-	if err != nil {
-		return nil, fmt.Errorf("cannot parse response: %w", err)
-	}
+	err = json.NewDecoder(resp.Body).Decode(&schedule)
 
-	return schedule.Intervals, nil
+	return schedule.Intervals, err
 }

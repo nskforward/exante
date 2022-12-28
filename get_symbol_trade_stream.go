@@ -29,8 +29,6 @@ func (client *Client) GetSymbolTradeStream(ctx context.Context, symbolIDs ...str
 		return nil, err
 	}
 
-	req.Header.Add("Accept", "application/x-json-stream")
-
 	resp, err := client.executeHttpRequest(req)
 	if err != nil {
 		return nil, err

@@ -14,7 +14,7 @@ func TestGetAccountSummaryByDate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	summary, err := client.GetAccountSummaryByDate("PIX0219.007", "USD", time.Now().AddDate(0, -6, 0))
+	summary, err := client.GetAccountSummaryByDate("USD", time.Now().AddDate(0, -6, 0))
 	if err != nil {
 		t.Fatal(err)
 	}

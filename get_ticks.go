@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
-	"time"
 )
 
 type Tick struct {
@@ -23,30 +21,6 @@ type Tick struct {
 	} `json:"ask"`
 }
 
-type FilterTicks struct {
-	Filter
-}
-
-func (f *FilterTicks) Limit(size int64) *FilterTicks {
-	f.addInt("size", size)
-	return f
-}
-
-func (f *FilterTicks) UseTrades() *FilterTicks {
-	f.addString("type", "trades")
-	return f
-}
-
-func (f *FilterTicks) DateFrom(date time.Time) *FilterTicks {
-	f.addString("from", strconv.FormatInt(date.UnixMilli(), 10))
-	return f
-}
-
-func (f *FilterTicks) DateTo(date time.Time) *FilterTicks {
-	f.addString("to", strconv.FormatInt(date.UnixMilli(), 10))
-	return f
-}
-
 func (client *Client) GetTicks(symbolId string, filter *FilterTicks, f func(tick Tick) bool) error {
 	url := fmt.Sprintf("%s/md/3.0/ticks/%s%s", client.serverAddr, symbolId, filter.string())
 
@@ -54,8 +28,6 @@ func (client *Client) GetTicks(symbolId string, filter *FilterTicks, f func(tick
 	if err != nil {
 		return err
 	}
-
-	req.Header.Add("Accept", "application/json")
 
 	resp, err := client.executeHttpRequest(req)
 	if err != nil {

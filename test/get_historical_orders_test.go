@@ -25,5 +25,5 @@ func TestGetHistoricalOrders(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(count)
+	fmt.Println("orders:", count)
 }

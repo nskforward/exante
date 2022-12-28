@@ -8,12 +8,11 @@ import (
 
 func (client *Client) GetInstrumentsByExchange(exchangeID string, f func(instrument Instrument) bool) error {
 	url := fmt.Sprintf("%s/md/3.0/exchanges/%s", client.serverAddr, exchangeID)
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err
 	}
-
-	req.Header.Add("Accept", "application/json")
 
 	resp, err := client.executeHttpRequest(req)
 	if err != nil {

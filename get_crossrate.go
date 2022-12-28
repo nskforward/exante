@@ -3,7 +3,6 @@ package exante
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -15,12 +14,11 @@ type Crossrate struct {
 
 func (client *Client) GetCrossrate(fromSymbolID, toSymbolID string) (Crossrate, error) {
 	url := fmt.Sprintf("%s/md/3.0/crossrates/%s/%s", client.serverAddr, fromSymbolID, toSymbolID)
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return Crossrate{}, err
 	}
-
-	req.Header.Add("Accept", "application/json")
 
 	resp, err := client.executeHttpRequest(req)
 	if err != nil {
@@ -28,17 +26,8 @@ func (client *Client) GetCrossrate(fromSymbolID, toSymbolID string) (Crossrate, 
 	}
 
 	defer client.closeResponse(resp.Body)
-
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return Crossrate{}, fmt.Errorf("cannot read response body: %w", err)
-	}
-
 	var crossrate Crossrate
-	err = json.Unmarshal(data, &crossrate)
-	if err != nil {
-		return Crossrate{}, fmt.Errorf("cannot parse response: %w", err)
-	}
+	err = json.NewDecoder(resp.Body).Decode(&crossrate)
 
-	return crossrate, nil
+	return crossrate, err
 }

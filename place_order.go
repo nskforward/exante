@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 )
@@ -17,21 +16,20 @@ const (
 )
 
 func (client *Client) placeOrder(order map[string]string) ([]ResponseOrder, error) {
-	dataReq, err := json.Marshal(order)
+	data, err := json.Marshal(order)
 	if err != nil {
 		return nil, err
 	}
 
 	url := fmt.Sprintf("%s/trade/3.0/orders", client.serverAddr)
 
-	req, err := http.NewRequest("POST", url, bytes.NewReader(dataReq))
+	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Content-Length", strconv.Itoa(len(dataReq)))
+	req.Header.Add("Content-Length", strconv.Itoa(len(data)))
 
 	resp, err := client.executeHttpRequest(req)
 	if err != nil {
@@ -39,13 +37,7 @@ func (client *Client) placeOrder(order map[string]string) ([]ResponseOrder, erro
 	}
 
 	defer client.closeResponse(resp.Body)
-
-	dataResp, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
 	var orders []ResponseOrder
-	err = json.Unmarshal(dataResp, &orders)
+	err = json.NewDecoder(resp.Body).Decode(&orders)
 	return orders, err
 }

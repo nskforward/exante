@@ -36,6 +36,7 @@ func NewClient(ctx context.Context, accountID, serverAddr, clientID, appID, shar
 	if err != nil {
 		return nil, fmt.Errorf("ping request failed: %w", err)
 	}
+
 	found := false
 	for _, acc := range accounts {
 		if acc.AccountID == accountID {

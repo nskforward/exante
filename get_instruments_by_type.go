@@ -8,12 +8,11 @@ import (
 
 func (client *Client) GetInstrumentsByType(symbolType string, f func(instrument Instrument) bool) error {
 	url := fmt.Sprintf("%s/md/3.0/types/%s", client.serverAddr, symbolType)
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err
 	}
-
-	req.Header.Add("Accept", "application/json")
 
 	resp, err := client.executeHttpRequest(req)
 	if err != nil {

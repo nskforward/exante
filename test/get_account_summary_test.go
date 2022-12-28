@@ -14,7 +14,7 @@ func TestGetAccountSummary(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	summary, err := client.GetAccountSummary("PIX0219.007", "USD")
+	summary, err := client.GetAccountSummary("USD")
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -3,7 +3,6 @@ package exante
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -15,32 +14,22 @@ type InstrumentSpecification struct {
 	Units              string `json:"units"`
 }
 
-func (client *Client) GetInstrumentSpecification(SymbolID string) (InstrumentSpecification, error) {
-	url := fmt.Sprintf("%s/md/3.0/symbols/%s/specification", client.serverAddr, SymbolID)
+func (client *Client) GetInstrumentSpecification(symbolID string) (InstrumentSpecification, error) {
+	url := fmt.Sprintf("%s/md/3.0/symbols/%s/specification", client.serverAddr, symbolID)
+	var specification InstrumentSpecification
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return InstrumentSpecification{}, err
+		return specification, err
 	}
-
-	req.Header.Add("Accept", "application/json")
 
 	resp, err := client.executeHttpRequest(req)
 	if err != nil {
-		return InstrumentSpecification{}, err
+		return specification, err
 	}
 
 	defer client.closeResponse(resp.Body)
+	err = json.NewDecoder(resp.Body).Decode(&specification)
 
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return InstrumentSpecification{}, fmt.Errorf("cannot read response body: %w", err)
-	}
-
-	var specification InstrumentSpecification
-	err = json.Unmarshal(data, &specification)
-	if err != nil {
-		return InstrumentSpecification{}, fmt.Errorf("cannot parse response: %w", err)
-	}
-
-	return specification, nil
+	return specification, err
 }
