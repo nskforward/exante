@@ -7,7 +7,11 @@ import (
 )
 
 func (client *Client) GetHistoricalOrders(filter *FilterHistoricalOrders, f func(order ResponseOrder) bool) error {
-	url := fmt.Sprintf("%s/trade/3.0/orders%s", client.serverAddr, filter.string())
+	filterQuery := ""
+	if filter != nil {
+		filterQuery = filter.String()
+	}
+	url := fmt.Sprintf("%s/trade/3.0/orders%s", client.serverAddr, filterQuery)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

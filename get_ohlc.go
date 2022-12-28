@@ -24,7 +24,12 @@ func (client *Client) GetOHLC(symbolID string, period time.Duration, filter *Fil
 		return nil, fmt.Errorf("period can be one of [1m, 5m, 10m, 15m, 30m, 1h, 4h, 6h, 24h]")
 	}
 
-	url := fmt.Sprintf("%s/md/3.0/ohlc/%s/%d%s", client.serverAddr, symbolID, int64(period.Seconds()), filter.string())
+	filterQuery := ""
+	if filter != nil {
+		filterQuery = filter.String()
+	}
+
+	url := fmt.Sprintf("%s/md/3.0/ohlc/%s/%d%s", client.serverAddr, symbolID, int64(period.Seconds()), filterQuery)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err

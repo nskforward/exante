@@ -14,7 +14,7 @@ func TestCancelOrder(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	order, err := client.CancelOrder("0a3b066b-134d-4d61-9bdf-6ea0d0fae281")
+	order, err := client.CancelOrder("f96a2282-4035-4ca3-9130-bbcb366b31e8")
 	if err != nil {
 		t.Fatal(err)
 	}

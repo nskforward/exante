@@ -29,6 +29,8 @@ func (client *Client) GetSymbolTradeStream(ctx context.Context, symbolIDs ...str
 		return nil, err
 	}
 
+	req.Header.Add("Accept", "application/x-json-stream")
+
 	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return nil, err
@@ -55,7 +57,6 @@ func (client *Client) GetSymbolTradeStream(ctx context.Context, symbolIDs ...str
 			}
 
 			if t.Event != "" {
-				fmt.Println(t.SymbolID, "trades:", t.Event)
 				continue
 			}
 

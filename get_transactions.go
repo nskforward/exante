@@ -7,7 +7,12 @@ import (
 )
 
 func (client *Client) GetTransactions(filter *FilterTransactions, f func(transaction Transaction) bool) error {
-	url := fmt.Sprintf("%s/md/3.0/transactions%s", client.serverAddr, filter.string())
+	filterQuery := ""
+	if filter != nil {
+		filterQuery = filter.String()
+	}
+
+	url := fmt.Sprintf("%s/md/3.0/transactions%s", client.serverAddr, filterQuery)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

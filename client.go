@@ -23,6 +23,27 @@ type Client struct {
 }
 
 func NewClient(ctx context.Context, accountID, serverAddr, clientID, appID, sharedKey string) (*Client, error) {
+
+	if serverAddr == "" {
+		return nil, fmt.Errorf("accountID must be defined")
+	}
+
+	if serverAddr == "" {
+		return nil, fmt.Errorf("serverAddr must be defined")
+	}
+
+	if clientID == "" {
+		return nil, fmt.Errorf("clientID must be defined")
+	}
+
+	if appID == "" {
+		return nil, fmt.Errorf("appID must be defined")
+	}
+
+	if sharedKey == "" {
+		return nil, fmt.Errorf("sharedKey must be defined")
+	}
+
 	client := &Client{
 		ctx:        ctx,
 		accountID:  accountID,

@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func (client *Client) PlaceLimitOrder(symbolID string, side OrderSide, price, quantity float64, settings SettingsLimitOrder) ([]ResponseOrder, error) {
+func (client *Client) PlaceLimitOrder(symbolID string, side OrderSide, price, quantity float64, settings *SettingsLimitOrder) ([]ResponseOrder, error) {
 	order := map[string]string{
 		"orderType":  "limit",
 		"duration":   "good_till_cancel",
@@ -15,10 +15,12 @@ func (client *Client) PlaceLimitOrder(symbolID string, side OrderSide, price, qu
 		"limitPrice": fmt.Sprintf("%.4f", price),
 	}
 
-	for k, v := range settings.getMap() {
-		order[k] = v
-		if k == "gttExpiration" {
-			order["duration"] = "good_till_time"
+	if settings != nil {
+		for k, v := range settings.getMap() {
+			order[k] = v
+			if k == "gttExpiration" {
+				order["duration"] = "good_till_time"
+			}
 		}
 	}
 

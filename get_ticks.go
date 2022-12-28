@@ -22,7 +22,12 @@ type Tick struct {
 }
 
 func (client *Client) GetTicks(symbolID string, filter *FilterTicks, f func(tick Tick) bool) error {
-	url := fmt.Sprintf("%s/md/3.0/ticks/%s%s", client.serverAddr, symbolID, filter.string())
+	filterQuery := ""
+	if filter != nil {
+		filterQuery = filter.String()
+	}
+
+	url := fmt.Sprintf("%s/md/3.0/ticks/%s%s", client.serverAddr, symbolID, filterQuery)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	accessTokenRefreshInterval = 4 * time.Hour
+	accessTokenRefreshInterval = time.Hour
 )
 
 type jwt struct {

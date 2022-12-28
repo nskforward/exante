@@ -31,7 +31,7 @@ func (f *Filter) addFloat(name string, value float64) {
 	f.values[name] = fmt.Sprintf("%.4f", value)
 }
 
-func (f *Filter) string() string {
+func (f *Filter) String() string {
 	var buf bytes.Buffer
 	count := 0
 	for k, v := range f.values {

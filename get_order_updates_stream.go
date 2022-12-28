@@ -21,6 +21,8 @@ func (client *Client) GetOrderUpdatesStream(ctx context.Context) (chan ResponseO
 		return nil, err
 	}
 
+	req.Header.Add("Accept", "application/x-json-stream")
+
 	resp, err := client.executeHTTPRequest(req)
 	if err != nil {
 		return nil, err
