@@ -14,12 +14,12 @@ func TestGetOHLC(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	candles, err := client.GetOHLC("BTC.USD", time.Minute, 3, true)
+	candles, err := client.GetOHLC("BTC.USD", time.Minute, map[string]string{"size": "20", "type": "quotes"})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(candles) == 0 {
 		t.Fatal("candles cannot be empty")
 	}
-	fmt.Println(candles)
+	fmt.Println("candles:", len(candles))
 }

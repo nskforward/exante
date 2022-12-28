@@ -14,7 +14,7 @@ func TestGetActiveOrders(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	orders, err := client.GetActiveOrders("BTC.USD", 10)
+	orders, err := client.GetActiveOrders(map[string]string{"symbolId": "BTC.USD", "limit": "20"})
 	if err != nil {
 		t.Fatal(err)
 	}
