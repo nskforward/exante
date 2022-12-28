@@ -4,14 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
-func (client *Client) GetTransactions(filter map[string]string) ([]Transaction, error) {
-	client.refreshAccessToken()
-
+func (client *Client) GetTransactions(filter map[string]string, f func(transaction Transaction) bool) error {
 	var buf bytes.Buffer
 	count := 0
 	for k, v := range filter {
@@ -28,31 +24,35 @@ func (client *Client) GetTransactions(filter map[string]string) ([]Transaction, 
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	req.WithContext(client.ctx)
-	req.Header.Add("Authorization", strings.Join([]string{"Bearer", client.accessToken}, " "))
+
 	req.Header.Add("Accept", "application/json")
-	resp, err := http.DefaultClient.Do(req)
+
+	resp, err := client.executeHttpRequest(req)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	defer client.closeResponse(resp.Body)
+	d := json.NewDecoder(resp.Body)
+
+	_, err = d.Token()
 	if err != nil {
-		return nil, fmt.Errorf("cannot read response body: %w", err)
+		return err
 	}
 
-	if resp.StatusCode > 399 {
-		return nil, fmt.Errorf("bad http response code: %s: %s", resp.Status, string(data))
+	for d.More() {
+		var transaction Transaction
+		err := d.Decode(&transaction)
+		if err != nil {
+			return err
+		}
+		if !f(transaction) {
+			return nil
+		}
 	}
 
-	var transactions []Transaction
-	err = json.Unmarshal(data, &transactions)
-	if err != nil {
-		return nil, fmt.Errorf("cannot parse response: %w", err)
-	}
-
-	return transactions, nil
+	_, err = d.Token()
+	return err
 }

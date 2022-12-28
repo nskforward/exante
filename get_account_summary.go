@@ -5,33 +5,27 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
 func (client *Client) GetAccountSummary(accountID, currency string) (AccountSummary, error) {
-	client.refreshAccessToken()
-
 	url := fmt.Sprintf("%s/md/3.0/summary/%s/%s", client.serverAddr, accountID, currency)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return AccountSummary{}, err
 	}
-	req.WithContext(client.ctx)
-	req.Header.Add("Authorization", strings.Join([]string{"Bearer", client.accessToken}, " "))
+
 	req.Header.Add("Accept", "application/json")
-	resp, err := http.DefaultClient.Do(req)
+
+	resp, err := client.executeHttpRequest(req)
 	if err != nil {
 		return AccountSummary{}, err
 	}
 
-	defer resp.Body.Close()
+	defer client.closeResponse(resp.Body)
+
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return AccountSummary{}, fmt.Errorf("cannot read response body: %w", err)
-	}
-
-	if resp.StatusCode > 399 {
-		return AccountSummary{}, fmt.Errorf("bad http response code: %s: %s", resp.Status, string(data))
 	}
 
 	var summary AccountSummary

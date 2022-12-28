@@ -3,6 +3,7 @@ package test
 import (
 	"context"
 	"fmt"
+	"github.com/nskforward/exante"
 	"testing"
 	"time"
 )
@@ -14,12 +15,13 @@ func TestGetHistoricalOrders(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	orders, err := client.GetHistoricalOrders(map[string]string{"limit": "10"})
+	count := 0
+	err = client.GetHistoricalOrders(map[string]string{"limit": "10"}, func(order exante.ResponseOrder) bool {
+		count++
+		return true
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(orders) == 0 {
-		t.Fatal("orders cannot be empty")
-	}
-	fmt.Println(orders)
+	fmt.Println(count)
 }

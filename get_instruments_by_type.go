@@ -3,42 +3,42 @@ package exante
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
-func (client *Client) GetInstrumentsByType(SymbolType string) ([]Instrument, error) {
-	client.refreshAccessToken()
-
+func (client *Client) GetInstrumentsByType(SymbolType string, f func(instrument Instrument) bool) error {
 	url := fmt.Sprintf("%s/md/3.0/types/%s", client.serverAddr, SymbolType)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	req.WithContext(client.ctx)
-	req.Header.Add("Authorization", strings.Join([]string{"Bearer", client.accessToken}, " "))
+
 	req.Header.Add("Accept", "application/json")
-	resp, err := http.DefaultClient.Do(req)
+
+	resp, err := client.executeHttpRequest(req)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	defer client.closeResponse(resp.Body)
+	d := json.NewDecoder(resp.Body)
+
+	_, err = d.Token()
 	if err != nil {
-		return nil, fmt.Errorf("cannot read response body: %w", err)
+		return err
 	}
 
-	if resp.StatusCode > 399 {
-		return nil, fmt.Errorf("bad http response code: %s: %s", resp.Status, string(data))
+	for d.More() {
+		var instrument Instrument
+		err := d.Decode(&instrument)
+		if err != nil {
+			return err
+		}
+		if !f(instrument) {
+			return nil
+		}
 	}
 
-	var instruments []Instrument
-	err = json.Unmarshal(data, &instruments)
-	if err != nil {
-		return nil, fmt.Errorf("cannot parse response: %w", err)
-	}
-
-	return instruments, nil
+	_, err = d.Token()
+	return err
 }

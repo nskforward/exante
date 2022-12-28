@@ -25,7 +25,7 @@ type jwt struct {
 
 func (client *Client) refreshAccessToken() {
 	if client.accessTokenExpiration < time.Now().Add(time.Minute).Unix() {
-		fmt.Println("refresh access token")
+		//fmt.Println("refresh access token")
 		client.accessTokenExpiration = time.Now().Add(accessTokenRefreshInterval).Unix()
 		client.accessToken = generateAccessToken(client.clientID, client.appID, client.sharedKey, client.accessTokenExpiration)
 	}

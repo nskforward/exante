@@ -1,11 +1,10 @@
 package exante
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
 type Tick struct {
@@ -23,42 +22,52 @@ type Tick struct {
 	} `json:"ask"`
 }
 
-func (client *Client) GetTicks(symbolId string, size int, trades bool) ([]Tick, error) {
-	client.refreshAccessToken()
-
-	candleType := "quotes"
-	if trades {
-		candleType = "trades"
+func (client *Client) GetTicks(symbolId string, filter map[string]string, f func(tick Tick) bool) error {
+	var buf bytes.Buffer
+	count := 0
+	for k, v := range filter {
+		if count > 0 {
+			buf.WriteString("&")
+		}
+		buf.WriteString(k)
+		buf.WriteString("=")
+		buf.WriteString(v)
+		count++
 	}
 
-	url := fmt.Sprintf("%s/md/3.0/ticks/%s?size=%d&type=%s", client.serverAddr, symbolId, size, candleType)
+	url := fmt.Sprintf("%s/md/3.0/ticks/%s?%s", client.serverAddr, symbolId, buf.String())
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	req.WithContext(client.ctx)
-	req.Header.Add("Authorization", strings.Join([]string{"Bearer", client.accessToken}, " "))
+
 	req.Header.Add("Accept", "application/json")
-	resp, err := http.DefaultClient.Do(req)
+
+	resp, err := client.executeHttpRequest(req)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	defer client.closeResponse(resp.Body)
+	d := json.NewDecoder(resp.Body)
+
+	_, err = d.Token()
 	if err != nil {
-		return nil, fmt.Errorf("cannot read response body: %w", err)
+		return err
 	}
 
-	if resp.StatusCode > 399 {
-		return nil, fmt.Errorf("bad http response code: %s: %s", resp.Status, string(data))
+	for d.More() {
+		var tick Tick
+		err := d.Decode(&tick)
+		if err != nil {
+			return err
+		}
+		if !f(tick) {
+			return nil
+		}
 	}
 
-	var ticks []Tick
-	err = json.Unmarshal(data, &ticks)
-	if err != nil {
-		return nil, fmt.Errorf("cannot parse response: %w", err)
-	}
-
-	return ticks, nil
+	_, err = d.Token()
+	return err
 }

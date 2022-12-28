@@ -3,6 +3,7 @@ package test
 import (
 	"context"
 	"fmt"
+	"github.com/nskforward/exante"
 	"testing"
 	"time"
 )
@@ -14,12 +15,13 @@ func TestGetInstrumentsByType(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	instruments, err := client.GetInstrumentsByType("FUTURE")
+	count := 0
+	err = client.GetInstrumentsByType("FUTURE", func(instrument exante.Instrument) bool {
+		count++
+		return true
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(instruments) == 0 {
-		t.Fatal("instruments cannot be empty")
-	}
-	fmt.Println("instruments:", len(instruments))
+	fmt.Println("instruments:", count)
 }

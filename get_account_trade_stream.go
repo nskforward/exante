@@ -5,9 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
 type AccountTrade struct {
@@ -20,33 +18,25 @@ type AccountTrade struct {
 }
 
 func (client *Client) GetAccountTradeStream(ctx context.Context) (chan AccountTrade, error) {
-	client.refreshAccessToken()
-
 	url := fmt.Sprintf("%s/trade/3.0/stream/trades", client.serverAddr)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
-	req.WithContext(client.ctx)
-	req.Header.Add("Authorization", strings.Join([]string{"Bearer", client.accessToken}, " "))
+
 	req.Header.Add("Accept", "application/x-json-stream")
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := client.executeHttpRequest(req)
 	if err != nil {
 		return nil, err
-	}
-
-	if resp.StatusCode > 399 {
-		data, _ := ioutil.ReadAll(resp.Body)
-		_ = resp.Body.Close()
-		return nil, fmt.Errorf("bad http response code: %s: %s", resp.Status, string(data))
 	}
 
 	ch := make(chan AccountTrade, 1)
 
 	go func() {
-		defer resp.Body.Close()
+		defer client.closeResponse(resp.Body)
+
 		defer close(ch)
 
 		d := json.NewDecoder(resp.Body)

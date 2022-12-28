@@ -18,11 +18,4 @@ type Instrument struct {
 	} `json:"optionData"`
 	MinPriceIncrement string `json:"minPriceIncrement"`
 	Currency          string `json:"currency"`
-	Identifiers       struct {
-		ISIN  string `json:"ISIN"`
-		FIGI  string `json:"FIGI"`
-		CUSIP string `json:"CUSIP"`
-		RIC   string `json:"RIC"`
-		SEDOL string `json:"SEDOL"`
-	} `json:"identifiers"`
 }

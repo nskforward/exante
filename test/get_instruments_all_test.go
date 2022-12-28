@@ -3,9 +3,13 @@ package test
 import (
 	"context"
 	"fmt"
+	"github.com/nskforward/exante"
+	"runtime"
 	"testing"
 	"time"
 )
+
+// 1755 --> 325 --> 274
 
 func TestGetInstrumentsAll(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
@@ -14,12 +18,23 @@ func TestGetInstrumentsAll(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	instruments, err := client.GetInstrumentsAll()
+
+	var stat runtime.MemStats
+	runtime.ReadMemStats(&stat)
+	totalBytes := stat.TotalAlloc
+
+	count := 0
+	err = client.GetInstrumentsAll(func(instrument exante.Instrument) bool {
+		count++
+		return true
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(instruments) == 0 {
-		t.Fatal("instruments cannot be empty")
-	}
-	fmt.Println("instruments:", len(instruments))
+
+	runtime.ReadMemStats(&stat)
+
+	fmt.Println((stat.TotalAlloc-totalBytes)/1024/1024, "MB")
+
+	fmt.Println("instruments:", count)
 }

@@ -3,6 +3,7 @@ package test
 import (
 	"context"
 	"fmt"
+	"github.com/nskforward/exante"
 	"testing"
 	"time"
 )
@@ -14,12 +15,13 @@ func TestGetTicks(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	ticks, err := client.GetTicks("BTC.USD", 3, false)
+	count := 0
+	err = client.GetTicks("BTC.USD", map[string]string{"size": "1000"}, func(tick exante.Tick) bool {
+		count++
+		return true
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(ticks) == 0 {
-		t.Fatal("ticks cannot be empty")
-	}
-	fmt.Println(ticks)
+	fmt.Println("ticks:", count)
 }
