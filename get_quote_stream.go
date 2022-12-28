@@ -9,7 +9,14 @@ import (
 	"strings"
 )
 
-func (client *Client) GetQuoteStream(ctx context.Context, level string, symbolIDs ...string) (chan Quote, error) {
+type QuoteLevel string
+
+const (
+	BestPrice   QuoteLevel = "best_price"
+	MarketDepth QuoteLevel = "market_depth"
+)
+
+func (client *Client) GetQuoteStream(ctx context.Context, level QuoteLevel, symbolIDs ...string) (chan Quote, error) {
 	if len(symbolIDs) == 0 {
 		return nil, fmt.Errorf("symbolIDs list must be defined")
 	}

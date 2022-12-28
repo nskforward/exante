@@ -2,6 +2,7 @@ package test
 
 import (
 	"context"
+	"github.com/nskforward/exante"
 	"log"
 	"testing"
 	"time"
@@ -15,7 +16,7 @@ func TestGetQuoteStream(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ch, err := client.GetQuoteStream(ctx, "best_price", "BTC.USD", "INTC.NASDAQ")
+	ch, err := client.GetQuoteStream(ctx, exante.BestPrice, "BTC.USD", "INTC.NASDAQ")
 	if err != nil {
 		t.Fatal(err)
 	}
