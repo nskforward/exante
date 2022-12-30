@@ -14,7 +14,7 @@ spec: https://api-live.exante.eu/api-docs/
 
 ## Installation
 ```
-go get -u github.com/nskforward/exante/http
+go get -u github.com/nskforward/exante
 ```
 
 ## Quick start
