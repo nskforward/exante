@@ -15,7 +15,7 @@ spec: https://api-live.exante.eu/api-docs/
 
 ## Installation
 ```
-go get -u github.com/nskforward/exante
+go get -u github.com/nskforward/exante/http
 ```
 
 ## Quick start
@@ -25,7 +25,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/nskforward/exante"
+	exante "github.com/nskforward/exante/http"
 )
 
 func main() {
