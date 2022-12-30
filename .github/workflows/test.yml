@@ -41,4 +41,4 @@ jobs:
         go-version: 1.18
 
     - name: Test
-      run: cd http; go test -v ./... -run TestBaseline
+      run: go test -v ./... -run TestBaseline
