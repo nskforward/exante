@@ -1,4 +1,4 @@
-package jwt
+package http
 
 import (
 	"bytes"
@@ -18,7 +18,7 @@ type JWT struct {
 	IssuedAt  int64    `json:"iat,omitempty"`
 }
 
-func Generate(claims JWT, secret []byte) string {
+func GenerateJWT(claims JWT, secret []byte) string {
 	data, err := json.Marshal(claims)
 	if err != nil {
 		panic(err)
