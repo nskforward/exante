@@ -24,7 +24,7 @@ package main
 import (
 	"context"
 	"fmt"
-	exante "github.com/nskforward/exante/http"
+	"github.com/nskforward/exante"
 )
 
 func main() {
