@@ -1,6 +1,9 @@
 package exante
 
-import "time"
+import (
+	"github.com/nskforward/exante/pkg/jwt"
+	"time"
+)
 
 const (
 	accessTokenRefreshInterval = time.Hour
@@ -14,7 +17,7 @@ func (client *Client) refreshAccessToken() {
 }
 
 func generateAccessToken(clientID, appID, sharedKey string, expiration int64) string {
-	return GenerateJWT(JWT{
+	return jwt.Generate(jwt.JWT{
 		Issuer:    clientID,
 		Subject:   appID,
 		Audience:  []string{"symbols", "ohlc", "feed", "change", "crossrates", "orders", "summary", "accounts", "transactions"},
