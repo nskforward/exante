@@ -2,7 +2,7 @@ package test
 
 import (
 	"context"
-	"github.com/nskforward/exante"
+	exante "github.com/nskforward/exante_http"
 	"log"
 	"testing"
 	"time"

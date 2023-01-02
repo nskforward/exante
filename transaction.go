@@ -1,4 +1,4 @@
-package exante
+package exante_http
 
 type Transaction struct {
 	ID            int    `json:"id"`

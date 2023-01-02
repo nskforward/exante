@@ -1,4 +1,4 @@
-package exante
+package exante_http
 
 type Instrument struct {
 	SymbolID           string `json:"symbolId"`

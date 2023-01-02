@@ -1,4 +1,4 @@
-package exante
+package exante_http
 
 type ResponseOrder struct {
 	OrderID               string `json:"orderId"`

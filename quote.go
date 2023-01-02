@@ -1,4 +1,4 @@
-package exante
+package exante_http
 
 type Quote struct {
 	Timestamp int64  `json:"timestamp"`

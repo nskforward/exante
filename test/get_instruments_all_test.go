@@ -3,7 +3,7 @@ package test
 import (
 	"context"
 	"fmt"
-	"github.com/nskforward/exante"
+	exante "github.com/nskforward/exante_http"
 	"runtime"
 	"testing"
 	"time"

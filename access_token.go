@@ -1,7 +1,7 @@
-package exante
+package exante_http
 
 import (
-	"github.com/nskforward/exante/pkg/jwt"
+	"github.com/nskforward/exante_http/pkg/jwt"
 	"time"
 )
 
