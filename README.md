@@ -1,3 +1,4 @@
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/nskforward/exante)
 [![GoDoc](https://pkg.go.dev/badge/github.com/nskforward/exante?status.svg)](https://pkg.go.dev/github.com/nskforward/exante?tab=doc)
 [![Version](https://img.shields.io/github/v/tag/nskforward/exante)](https://github.com/nskforward/exante/tags)
 [![License](https://img.shields.io/github/license/nskforward/exante)](https://github.com/nskforward/exante/blob/main/LICENSE)
