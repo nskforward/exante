@@ -2,8 +2,6 @@ package test
 
 import (
 	"context"
-	"fmt"
-	exante "github.com/nskforward/exante_http"
 	"testing"
 	"time"
 )
@@ -15,13 +13,8 @@ func TestGetInstrumentsByExchange(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	count := 0
-	err = client.GetInstrumentsByExchange("NASDAQ", func(instrument exante.Instrument) bool {
-		count++
-		return true
-	})
+	_, err = client.GetInstrumentsByExchange("NASDAQ")
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println("instruments:", count)
 }
