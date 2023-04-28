@@ -207,9 +207,7 @@ func TestBaseline(t *testing.T) {
 
 	{
 		step := "get instruments by exchange"
-		err = client.GetInstrumentsByExchange("NASDAQ", func(instrument exante.Instrument) bool {
-			return true
-		})
+		_, err = client.GetInstrumentsByExchange("NASDAQ")
 		if err != nil {
 			t.Fatal(err)
 		}
