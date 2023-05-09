@@ -42,6 +42,9 @@ func (client *Client) GetSymbolTradeStream(ctx context.Context, symbolIDs ...str
 		defer client.closeResponse(resp.Body)
 		defer close(ch)
 
+		fmt.Println("[debug] start trade stream:", strings.Join(symbolIDs, ","))
+		defer fmt.Println("[debug] stop trade stream:", strings.Join(symbolIDs, ","))
+
 		d := json.NewDecoder(resp.Body)
 
 		for {
